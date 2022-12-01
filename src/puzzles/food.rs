@@ -19,6 +19,22 @@ pub fn find_most_food(input: String) -> (usize, u32) {
     find_max(food)
 }
 
+pub fn find_top_three_holders(input: String) -> (u32, Vec<u32>) {
+    let food = read_food(input);
+    find_top_three(food)
+}
+
+fn find_top_three(list: FoodList) -> (u32, Vec<u32>){
+    let mut maxes: Vec<u32> = list.iter().map(|l| l.iter().sum()).collect();
+
+    maxes.sort();
+    let n: Vec<u32> = maxes.iter().rev().take(3).map(|v|*v).collect();
+
+    let sum: u32 = n.iter().sum();
+
+    (sum, n)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -31,5 +47,19 @@ mod tests {
 
         assert_eq!(number, 3);
         assert_eq!(value, 24000);
+    }
+
+    #[test]
+    fn sample_part_two() {
+        let sample = "1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000"
+        .to_string();
+
+        let (total, top_three) = find_top_three_holders(sample);
+
+        assert_eq!(total, 45000);
+        assert_eq!(top_three.get(0), Some(&24000));
+        assert_eq!(top_three.get(1), Some(&11000));
+        assert_eq!(top_three.get(2), Some(&10000));
+
     }
 }
