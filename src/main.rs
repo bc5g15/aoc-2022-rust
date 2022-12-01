@@ -20,8 +20,9 @@ fn main() {
     match value {
         1 => {
             let day1 = read_file("in1.txt");
-            let part1 = food::find_most_food(day1);
-            println!("Question 1: {part1:?}");
+            let part1 = food::find_most_food(&day1);
+            let part2 = food::find_top_three_holders(&day1);
+            println!("Question 1: {part1:?} {part2:?}");
         },
         n => {
             println!("No entry for day {n}");
