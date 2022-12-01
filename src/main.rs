@@ -1,4 +1,5 @@
 use std::env;
+mod puzzles;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
