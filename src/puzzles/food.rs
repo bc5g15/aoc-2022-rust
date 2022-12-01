@@ -1,6 +1,6 @@
 type FoodList = Vec<Vec<u32>>;
 
-fn read_food(input: String) -> FoodList {
+fn read_food(input: &String) -> FoodList {
     let vectored: Vec<&str> = input.trim().lines().collect();
     let grouped: Vec<&[&str]> = vectored.split(|s| *s == "").collect();
     grouped.iter()
@@ -14,12 +14,12 @@ fn find_max(list: FoodList) -> (usize, u32){
     *maxes.iter().max_by_key(|(_, v)| v).expect("A maximum should exist")
 }
 
-pub fn find_most_food(input: String) -> (usize, u32) {
+pub fn find_most_food(input: &String) -> (usize, u32) {
     let food = read_food(input);
     find_max(food)
 }
 
-pub fn find_top_three_holders(input: String) -> (u32, Vec<u32>) {
+pub fn find_top_three_holders(input: &String) -> (u32, Vec<u32>) {
     let food = read_food(input);
     find_top_three(food)
 }
@@ -43,7 +43,7 @@ mod tests {
         let sample = "1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000"
         .to_string();
 
-        let (number, value) = find_most_food(sample);
+        let (number, value) = find_most_food(&sample);
 
         assert_eq!(number, 3);
         assert_eq!(value, 24000);
@@ -54,7 +54,7 @@ mod tests {
         let sample = "1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000"
         .to_string();
 
-        let (total, top_three) = find_top_three_holders(sample);
+        let (total, top_three) = find_top_three_holders(&sample);
 
         assert_eq!(total, 45000);
         assert_eq!(top_three.get(0), Some(&24000));
