@@ -2,4 +2,4 @@
 
 This is my stab at doing the https://adventofcode.com/ puzzles in Rust, trying to get a feel for the language as I go. 
 
-Still too early to start, but watch this space!
+Day 1 - Calorie Counting: https://github.com/bc5g15/aoc-2022-rust/pull/1
