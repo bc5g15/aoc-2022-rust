@@ -49,14 +49,47 @@ pub fn guide_score(input: &String) -> u32 {
     game_score(g)
 }
 
+fn turn_conversion(turn: (char, char)) -> (char, char) {
+    // A: Rock B: Paper C: Scissors
+    // in   - X: lose Y: draw Z: win
+    // out  - X: Rock Y: Paper Z: Scissors
+    let (them, _) = turn;
+    let second = match turn {
+        ('A', 'X') => 'Z',
+        ('B', 'X') => 'X',
+        ('C', 'X') => 'Y',
+        ('A', 'Y') => 'X',
+        ('B', 'Y') => 'Y',
+        ('C', 'Y') => 'Z',
+        ('A', 'Z') => 'Y',
+        ('B', 'Z') => 'Z',
+        ('C', 'Z') => 'X',
+        _ => panic!("Unrecognized game {turn:?}")
+    };
+    (them, second)
+}
+
+pub fn true_guide_score(input: &String) -> u32 {
+    let g = read_guide(input);
+    let true_g: Guide = g.iter().map(|t| turn_conversion(*t)).collect();
+    game_score(true_g)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn part_one() {
         let input = "A Y\nB X\nC Z".to_string();
         let score = guide_score(&input);
         assert_eq!(score, 15);
+    }
+
+    #[test]
+    fn part_two() {
+        let input = "A Y\nB X\nC Z".to_string();
+        let score = true_guide_score(&input);
+        assert_eq!(score, 12)
     }
 }
