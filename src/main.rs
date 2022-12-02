@@ -1,6 +1,7 @@
 use std::{env, fs};
 mod puzzles;
 use puzzles::food;
+use puzzles::rps;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -24,6 +25,12 @@ fn main() {
             let part2 = food::find_top_three_holders(&day1);
             println!("Question 1: {part1:?} {part2:?}");
         },
+        2 => {
+            let day2 = read_file("in2.txt");
+            let part1 = rps::guide_score(&day2);
+            let part2 = rps::true_guide_score(&day2);
+            println!("Question 2: {part1}, {part2}");
+        }
         n => {
             println!("No entry for day {n}");
         }
