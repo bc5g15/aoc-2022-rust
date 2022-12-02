@@ -28,7 +28,8 @@ fn main() {
         2 => {
             let day2 = read_file("in2.txt");
             let part1 = rps::guide_score(&day2);
-            println!("Question 2: {part1}");
+            let part2 = rps::true_guide_score(&day2);
+            println!("Question 2: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
