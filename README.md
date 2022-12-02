@@ -3,3 +3,4 @@
 This is my stab at doing the https://adventofcode.com/ puzzles in Rust, trying to get a feel for the language as I go. 
 
 Day 1 - Calorie Counting: https://github.com/bc5g15/aoc-2022-rust/pull/1
+Day 2 - Rock Paper Scissors: https://github.com/bc5g15/aoc-2022-rust/pull/2
