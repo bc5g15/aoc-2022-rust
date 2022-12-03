@@ -2,6 +2,7 @@ use std::{env, fs};
 mod puzzles;
 use puzzles::food;
 use puzzles::rps;
+use puzzles::reorg;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -30,6 +31,12 @@ fn main() {
             let part1 = rps::guide_score(&day2);
             let part2 = rps::true_guide_score(&day2);
             println!("Question 2: {part1}, {part2}");
+        },
+        3 => {
+            let day3 = read_file("in3.txt");
+            let part1 = reorg::value_shared_priorities(&day3);
+            let part2 = reorg::badge_groups(&day3);
+            println!("Question 3: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
