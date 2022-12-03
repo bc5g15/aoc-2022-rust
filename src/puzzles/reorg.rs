@@ -57,38 +57,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn split_test() {
-        let input = "vJrwpWtwJgWrhcsFMMfFFhFp";
-        let midpoint = input.len() /2;
-        let (lhs, rhs) = input.split_at(midpoint);
-        assert_eq!(lhs, "vJrwpWtwJgWr");
-        assert_eq!(rhs, "hcsFMMfFFhFp");
-    }
-
-    #[test]
-    fn byte_test() {
-        let input = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let bytes: Vec<u8> = input.bytes().map(|b| b).collect();
-        dbg!(bytes);
-    }
-
-    #[test]
-    fn set_test() {
-        let input = "abcabc";
-        let collection: HashSet<char> = HashSet::from_iter(input.chars());
-        dbg!(collection);
-    }
-
-    #[test]
-    fn check_shared() {
-        let left = "vJrwpWtwJgWr".to_string();
-        let right = "hcsFMMfFFhFp".to_string();
-
-        let shared = find_shared(&left, &right);
-        dbg!(shared);
-    }
-
-    #[test]
     fn part_one_example() {
         let input = r"
 vJrwpWtwJgWrhcsFMMfFFhFp
