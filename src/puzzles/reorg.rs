@@ -29,6 +29,29 @@ pub fn value_shared_priorities(input: &String) -> u32{
     })
 }
 
+pub fn badge_groups(input: &String) -> u32{
+    let mut lines = input.trim().lines().peekable();
+
+    let mut final_value = 0;
+
+    while lines.peek().is_some() { 
+        let initial = lines.next().expect("Should be a line here");
+        let mut group_shared: HashSet<u8> = HashSet::from_iter(initial.bytes());
+        for _ in 1..3 {
+            let current = lines.next().expect("Line must exist at this point");
+            group_shared = group_shared.intersection(&HashSet::from_iter(current.bytes())).map(|c| *c).collect();
+        }
+
+        if group_shared.len() != 1 {
+            panic!("Should only be one element left in {group_shared:?}");
+        }
+
+        final_value = final_value + group_shared.iter().fold(0, |acc, x| get_value(*x) + acc);
+    }
+
+    final_value
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -77,5 +100,19 @@ CrZsJsPPZsGzwwsLwLmpwMDw
         ".to_string();
 
         assert_eq!(value_shared_priorities(&input), 157);
+    }
+
+    #[test]
+    fn part_two_example() {
+        let input = r"
+vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw
+        ".to_string();
+
+        assert_eq!(badge_groups(&input), 70);
     }
 }
