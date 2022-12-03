@@ -35,7 +35,8 @@ fn main() {
         3 => {
             let day3 = read_file("in3.txt");
             let part1 = reorg::value_shared_priorities(&day3);
-            println!("Question 3: {part1}")
+            let part2 = reorg::badge_groups(&day3);
+            println!("Question 3: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
