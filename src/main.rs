@@ -42,7 +42,8 @@ fn main() {
         4 => {
             let day4 = read_file("in4.txt");
             let part1 = cleanup::how_many_containments(&day4);
-            println!("Question 4: {part1}");
+            let part2 = cleanup::how_many_overlaps(&day4);
+            println!("Question 4: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
