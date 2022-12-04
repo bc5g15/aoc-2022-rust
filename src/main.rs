@@ -1,5 +1,6 @@
 use std::{env, fs};
 mod puzzles;
+use puzzles::cleanup;
 use puzzles::food;
 use puzzles::rps;
 use puzzles::reorg;
@@ -37,6 +38,11 @@ fn main() {
             let part1 = reorg::value_shared_priorities(&day3);
             let part2 = reorg::badge_groups(&day3);
             println!("Question 3: {part1}, {part2}");
+        },
+        4 => {
+            let day4 = read_file("in4.txt");
+            let part1 = cleanup::how_many_containments(&day4);
+            println!("Question 4: {part1}");
         }
         n => {
             println!("No entry for day {n}");
