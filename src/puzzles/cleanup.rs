@@ -27,10 +27,28 @@ fn has_containment(pair: RangePair) -> bool{
     false
 }
 
+fn has_overlap(pair: RangePair) -> bool {
+    let ((a, b), (x, y)) = pair;
+    if  a>=x && a<=y ||
+        b>=x && b<=y ||
+        x>=a && x<=b ||
+        y>=a && y<=b {
+        return true;
+    }
+    false
+}
+
 pub fn how_many_containments(input: &String) -> u32 {
     input.trim().lines()
         .map(|l| read_pairs(l))
         .filter(|rp| has_containment(*rp))
+        .count() as u32
+}
+
+pub fn how_many_overlaps(input: &String) -> u32 {
+    input.trim().lines()
+        .map(|l| read_pairs(l))
+        .filter(|rp| has_overlap(*rp))
         .count() as u32
 }
 
@@ -52,5 +70,20 @@ mod tests {
         let count = how_many_containments(&input);
 
         assert_eq!(count, 2);
+    }
+
+    #[test]
+    fn part_two() {
+        let input = r"
+2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8
+        ".to_string();
+
+        let count = how_many_overlaps(&input);
+        assert_eq!(count, 4);
     }
 }
