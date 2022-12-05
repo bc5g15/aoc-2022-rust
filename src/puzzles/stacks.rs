@@ -64,11 +64,43 @@ fn process(stacks: &mut Stacks, instruction: Instruction) {
     }
 }
 
+fn process_9001(stacks: &mut Stacks, instruction: Instruction) {
+    let (count, origin, destination) = instruction;
+    let mut temp: Vec<char> = Vec::new();
+
+    for _ in 0..count {
+        let move_me = stacks.get_mut(&origin).expect("origin index must exist").pop().unwrap();
+        temp.push(move_me);
+    }
+
+    while temp.len() > 0 {
+        let move_me = temp.pop().unwrap();
+        stacks.get_mut(&destination).expect("Destination index must exist").push(move_me);
+    }
+}
+
 pub fn full_process(input: &String) -> String {
     let (mut stacks, instructions) = read_arrangement(input);
 
     for instruction in instructions {
         process(&mut stacks, instruction);
+    }
+
+    let mut output: Vec<char> = Vec::new();
+
+    for i in 1..=stacks.len() {
+        let c = stacks.get(&(i as u8)).unwrap().last().unwrap();
+        output.push(*c);
+    }
+
+    output.iter().collect()
+}
+
+pub fn full_process_9001(input: &String) -> String {
+    let (mut stacks, instructions) = read_arrangement(input);
+
+    for instruction in instructions {
+        process_9001(&mut stacks, instruction);
     }
 
     let mut output: Vec<char> = Vec::new();
@@ -109,7 +141,7 @@ mod tests {
     }
 
     #[test]
-    fn bigger_read_test() {
+    fn part_one() {
         let input = r"    [D]    
 [N] [C]    
 [Z] [M] [P]
@@ -120,6 +152,25 @@ move 3 from 1 to 3
 move 2 from 2 to 1
 move 1 from 1 to 2".to_string();
 
-        dbg!(full_process(&input));
+        let s = full_process(&input);
+
+        assert_eq!(s, "CMZ".to_string());
+    }
+
+    #[test]
+    fn part_two() {
+        let input = r"    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2".to_string();
+
+        let s = full_process_9001(&input);
+
+        assert_eq!(s, "MCD".to_string());
     }
 }
