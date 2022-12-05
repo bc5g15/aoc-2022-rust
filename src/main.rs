@@ -4,6 +4,7 @@ use puzzles::cleanup;
 use puzzles::food;
 use puzzles::rps;
 use puzzles::reorg;
+use puzzles::stacks;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -44,6 +45,11 @@ fn main() {
             let part1 = cleanup::how_many_containments(&day4);
             let part2 = cleanup::how_many_overlaps(&day4);
             println!("Question 4: {part1}, {part2}");
+        },
+        5 => {
+            let day5 = read_file("in5.txt");
+            let part1 = stacks::full_process(&day5);
+            println!("Question 5: {part1}")
         }
         n => {
             println!("No entry for day {n}");
