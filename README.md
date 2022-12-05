@@ -9,3 +9,5 @@ Day 2 - Rock Paper Scissors: https://github.com/bc5g15/aoc-2022-rust/pull/2
 Day 3 - Rucksack Reorganization: https://github.com/bc5g15/aoc-2022-rust/pull/3
 
 Day 4 - Camp Cleanup: https://github.com/bc5g15/aoc-2022-rust/pull/4
+
+Day 5 - Supply Stacks: https://github.com/bc5g15/aoc-2022-rust/pull/5
