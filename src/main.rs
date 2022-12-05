@@ -49,7 +49,8 @@ fn main() {
         5 => {
             let day5 = read_file("in5.txt");
             let part1 = stacks::full_process(&day5);
-            println!("Question 5: {part1}")
+            let part2 = stacks::full_process_9001(&day5);
+            println!("Question 5: {part1}, {part2}")
         }
         n => {
             println!("No entry for day {n}");
