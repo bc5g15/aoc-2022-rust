@@ -118,29 +118,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn hm_behaviour() {
-        let mut test: HashMap<u8, Vec<u8>> = HashMap::new();
-
-        match test.get_mut(&1) {
-            Some(i) => i.push(2),
-            None => { test.insert(1, vec![3]); }
-        }
-
-        dbg!(test);
-    }
-
-    #[test]
-    fn read_test() {
-        let input = r"    [D]    
-[N] [C]    
-[Z] [M] [P]
- 1   2   3 ".to_string();
-
-        let out = read_boxes(input.lines().collect());
-        dbg!(out);
-    }
-
-    #[test]
     fn part_one() {
         let input = r"    [D]    
 [N] [C]    
