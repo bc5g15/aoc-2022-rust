@@ -5,6 +5,7 @@ use puzzles::food;
 use puzzles::rps;
 use puzzles::reorg;
 use puzzles::stacks;
+use puzzles::tuning;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -51,6 +52,11 @@ fn main() {
             let part1 = stacks::full_process(&day5);
             let part2 = stacks::full_process_9001(&day5);
             println!("Question 5: {part1}, {part2}")
+        },
+        6 => {
+            let day6 = read_file("in6.txt");
+            let part1 = tuning::first_marker(&day6).unwrap();
+            println!("Question 6: {part1}")
         }
         n => {
             println!("No entry for day {n}");
