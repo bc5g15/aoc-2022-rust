@@ -55,7 +55,7 @@ fn main() {
         },
         6 => {
             let day6 = read_file("in6.txt");
-            let part1 = tuning::first_marker(&day6).unwrap();
+            let part1 = tuning::first_marker(&day6, 4).unwrap();
             println!("Question 6: {part1}")
         }
         n => {
