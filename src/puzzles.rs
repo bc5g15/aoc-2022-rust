@@ -4,3 +4,6 @@ pub mod reorg;
 pub mod cleanup;
 pub mod stacks;
 pub mod tuning;
+pub mod filesys;
+pub mod filesysmap;
+pub mod filewalk;
