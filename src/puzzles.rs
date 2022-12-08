@@ -5,3 +5,4 @@ pub mod cleanup;
 pub mod stacks;
 pub mod tuning;
 pub mod filewalk;
+pub mod trees;
