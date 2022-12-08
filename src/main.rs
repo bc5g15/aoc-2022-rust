@@ -70,7 +70,8 @@ fn main() {
         8 => {
             let day8 = read_file("in8.txt");
             let part1 = trees::count_visible_trees(&day8);
-            println!("Question 8: {part1}");
+            let part2 = trees::best_scenic_score(&day8);
+            println!("Question 8: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
