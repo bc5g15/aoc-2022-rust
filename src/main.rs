@@ -64,7 +64,6 @@ fn main() {
             let day7 = read_file("in7.txt");
             let part1 = filewalk::biggest_small_dirs(&day7);
             let part2 = filewalk::smallest_big_dir(&day7);
-            // let part1 = filesysmap::biggest_small_dirs(&day7);
             println!("Question 7: {part1}, {part2}");
         }
         n => {
