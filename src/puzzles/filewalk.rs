@@ -112,6 +112,18 @@ pub fn biggest_small_dirs(input: &String) -> u32 {
     dirs.values().filter(|v| **v < 100_000).sum()
 }
 
+pub fn smallest_big_dir(input: &String) -> u32 {
+    // 30_000_000
+    // 70_000_000
+    let (_files, dirs) = traverse_tree(&input);
+
+    let top_weight = dirs.get("/").unwrap();
+    let free_space = 70_000_000 - top_weight;
+    let required_space = 30_000_000 - free_space;
+
+    *dirs.values().filter(|v| **v >= required_space).min().unwrap()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -143,8 +155,40 @@ $ ls
 5626152 d.ext
 7214296 k".to_string();
 
-        dbg!(traverse_tree(&input));
+        let (_f, d) = traverse_tree(&input);
+
+        dbg!(d.get("/"));
 
         assert_eq!(biggest_small_dirs(&input), 95437);
+    }
+
+    #[test]
+    fn part_two() {
+        let input = r"
+$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k".to_string();
+
+        assert_eq!(smallest_big_dir(&input), 24933642);
     }
 }
