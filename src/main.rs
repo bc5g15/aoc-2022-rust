@@ -6,6 +6,7 @@ use puzzles::rps;
 use puzzles::reorg;
 use puzzles::stacks;
 use puzzles::tuning;
+use puzzles::filewalk;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -58,6 +59,12 @@ fn main() {
             let part1 = tuning::first_marker(&day6, 4).unwrap();
             let part2 = tuning::first_marker(&day6, 14).unwrap();
             println!("Question 6: {part1}, {part2}");
+        },
+        7 => {
+            let day7 = read_file("in7.txt");
+            let part1 = filewalk::biggest_small_dirs(&day7);
+            let part2 = filewalk::smallest_big_dir(&day7);
+            println!("Question 7: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
