@@ -13,3 +13,5 @@ Day 4 - Camp Cleanup: https://github.com/bc5g15/aoc-2022-rust/pull/4
 Day 5 - Supply Stacks: https://github.com/bc5g15/aoc-2022-rust/pull/5
 
 Day 6 - Tuning Trouble: https://github.com/bc5g15/aoc-2022-rust/pull/6
+
+Day 7 - No Space Left On Device: https://github.com/bc5g15/aoc-2022-rust/pull/7
