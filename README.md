@@ -17,3 +17,5 @@ Day 6 - Tuning Trouble: https://github.com/bc5g15/aoc-2022-rust/pull/6
 Day 7 - No Space Left On Device: https://github.com/bc5g15/aoc-2022-rust/pull/7
 
 Day 8 - Treetop Tree House: https://github.com/bc5g15/aoc-2022-rust/pull/8
+
+Day 9 - Rope Bridge: https://github.com/bc5g15/aoc-2022-rust/pull/9
