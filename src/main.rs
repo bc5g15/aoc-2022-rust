@@ -8,6 +8,7 @@ use puzzles::stacks;
 use puzzles::tuning;
 use puzzles::filewalk;
 use puzzles::trees;
+use puzzles::tail_follow;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -72,6 +73,11 @@ fn main() {
             let part1 = trees::count_visible_trees(&day8);
             let part2 = trees::best_scenic_score(&day8);
             println!("Question 8: {part1}, {part2}");
+        },
+        9 => {
+            let day9 = read_file("in9.txt");
+            let part1 = tail_follow::tail_visited_positions(&day9);
+            println!("Question 9: {part1}");
         }
         n => {
             println!("No entry for day {n}");
