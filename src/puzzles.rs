@@ -6,3 +6,4 @@ pub mod stacks;
 pub mod tuning;
 pub mod filewalk;
 pub mod trees;
+pub mod tail_follow;
