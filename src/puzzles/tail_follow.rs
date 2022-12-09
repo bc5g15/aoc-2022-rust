@@ -9,6 +9,7 @@ enum Direction {
 type Motion = (Direction, i32);
 type Position = (i32, i32);
 type World = (Position, Position, HashSet<Position>);
+type ManyTailWorld = (Position, Vec<Position>, HashSet<Position>);
 
 fn parse_motions(input: &String) -> Vec<Motion>{
     use Direction::*;
@@ -97,12 +98,52 @@ fn update_world(world: World, motion: Motion) -> World {
     ((head_x, head_y), (tail_x, tail_y), visited)
 }
 
+fn update_many_tail_world(world: ManyTailWorld, motion: Motion) -> ManyTailWorld {
+    let (head, mut tails, mut visited) = world;
+    let (dir, steps) = motion;
+    let (mut head_x, mut head_y) = head;
+
+    let (delta_x, delta_y) = coord_delta(&dir);
+
+    for _ in 0..steps {
+        head_x += delta_x;
+        head_y += delta_y;
+
+        let mut last_head_x = head_x;
+        let mut last_head_y = head_y;
+        tails = tails.iter().map(|(tx,ty)| {
+            let (nx, ny) = tail_chase((last_head_x, last_head_y), (*tx, *ty));
+            last_head_x = nx;
+            last_head_y = ny;
+            (nx, ny)
+        }).collect();
+        visited.insert((last_head_x, last_head_y));
+    }
+
+    ((head_x, head_y), tails, visited)
+}
+
 pub fn tail_visited_positions(input: &String) -> u32 {
     let motions = parse_motions(input);
     let mut world: World = ((0, 0), (0, 0), HashSet::new());
 
     for motion in motions {
         world = update_world(world, motion);
+    }
+
+    let (_, _, visited) = world;
+    visited.len() as u32
+}
+
+pub fn many_tail_visited_positions(input: &String) -> u32 {
+    let motions = parse_motions(input);
+    let head = (0, 0);
+    let tails: Vec<Position> = (0..9).map(|_| (0, 0)).collect();
+
+    let mut world: ManyTailWorld = (head, tails, HashSet::new());
+
+    for motion in motions {
+        world = update_many_tail_world(world, motion);
     }
 
     let (_, _, visited) = world;
@@ -126,5 +167,37 @@ L 5
 R 2
         ".to_string();
         assert_eq!(tail_visited_positions(&input), 13);
+    }
+
+    #[test]
+
+    fn part_two_short() {
+        let input = r"
+R 4
+U 4
+L 3
+D 1
+R 4
+D 1
+L 5
+R 2
+        ".to_string();
+        assert_eq!(many_tail_visited_positions(&input), 1);
+    }
+
+    #[test]
+    fn part_two_long() {
+        let input = r"
+R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20
+    ".to_string();
+
+    assert_eq!(many_tail_visited_positions(&input), 36);
     }
 }
