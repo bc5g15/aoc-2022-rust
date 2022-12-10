@@ -1,4 +1,3 @@
-
 enum Instruction {
     AddX (i32),
     Noop
@@ -48,6 +47,73 @@ pub fn sample_at_points(input: &String) -> i32 {
         }
     }
     signal_sum
+}
+
+fn process_time(instruction: &Instruction) -> u32 {
+    use Instruction::*;
+    match instruction {
+        Noop => 1,
+        AddX (_) => 2
+    }
+}
+
+struct Process {
+    timer: u32,
+    is_complete: bool,
+    result: i32
+}
+
+impl Process {
+    fn new(instruction: &Instruction) -> Self {
+        Self {
+            timer: process_time(&instruction),
+            result : match instruction {
+                Instruction::Noop => 0,
+                Instruction::AddX(v) => *v
+            },
+            is_complete: false
+        }
+    }
+    fn run(&mut self) -> Option<i32>{
+        self.timer -= 1;
+        if self.timer > 0 {
+            return None;
+        }
+        self.is_complete = true;
+        Some(self.result)
+    }
+}
+
+pub fn get_whole_image(input: &String) {
+    let code: Vec<Instruction> = input.trim().lines().map(|l| parse_instruction(l)).collect();
+    let mut code_loop = code.iter().cycle();
+    let mut x: i32 = 1;
+
+    let mut line: Vec<char> = Vec::new();
+    let mut image: Vec<String> = Vec::new();
+
+    let mut process: Process = Process::new(code_loop.next().unwrap());
+
+    // lines
+    for _ in 0..6 {
+        // cells
+        for i in 0..40 {
+            // Drawing
+            line.push(if (x-i).abs() <= 1 {'#'} else {' '});
+
+            // Processing
+            let r = process.run();
+            if let Some(v) = r {
+                x += v;
+                process = Process::new(code_loop.next().unwrap());
+            }
+        }
+        image.push(line.iter().collect());
+        line = Vec::new();
+    }
+
+    let final_string = image.join("\n");
+    println!("{final_string}");
 }
 
 #[cfg(test)]
@@ -206,6 +272,5 @@ noop".to_string();
 
         let result = sample_at_points(&input);
         assert_eq!(result, 13140);
-        
     }
 }

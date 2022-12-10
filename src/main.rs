@@ -85,6 +85,7 @@ fn main() {
             let day10 = read_file("in10.txt");
             let part1 = crt::sample_at_points(&day10);
             println!("Question 10: {part1}");
+            crt::get_whole_image(&day10);
         }
         n => {
             println!("No entry for day {n}");
