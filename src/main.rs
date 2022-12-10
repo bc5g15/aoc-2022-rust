@@ -9,6 +9,7 @@ use puzzles::tuning;
 use puzzles::filewalk;
 use puzzles::trees;
 use puzzles::tail_follow;
+use puzzles::crt;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -79,6 +80,11 @@ fn main() {
             let part1 = tail_follow::tail_visited_positions(&day9);
             let part2 = tail_follow::many_tail_visited_positions(&day9);
             println!("Question 9: {part1}, {part2}");
+        },
+        10 => {
+            let day10 = read_file("in10.txt");
+            let part1 = crt::sample_at_points(&day10);
+            println!("Question 10: {part1}");
         }
         n => {
             println!("No entry for day {n}");
