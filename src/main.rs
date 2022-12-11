@@ -10,6 +10,7 @@ use puzzles::filewalk;
 use puzzles::trees;
 use puzzles::tail_follow;
 use puzzles::crt;
+use puzzles::monkeys;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -86,6 +87,12 @@ fn main() {
             let part1 = crt::sample_at_points(&day10);
             println!("Question 10: {part1}");
             crt::get_whole_image(&day10);
+        },
+        11 => {
+            let day11 = read_file("in11.txt");
+            let part1 = monkeys::monkey_business(&day11, false);
+            let part2 = monkeys::monkey_business(&day11, true);
+            println!("Question 11: {part1}, {part2}")
         }
         n => {
             println!("No entry for day {n}");
