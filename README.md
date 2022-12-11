@@ -21,3 +21,5 @@ Day 8 - Treetop Tree House: https://github.com/bc5g15/aoc-2022-rust/pull/8
 Day 9 - Rope Bridge: https://github.com/bc5g15/aoc-2022-rust/pull/9
 
 Day 10 - Cathode-Ray Tube: https://github.com/bc5g15/aoc-2022-rust/pull/10
+
+Day 11 - Monkey in the Middle: https://github.com/bc5g15/aoc-2022-rust/pull/11
