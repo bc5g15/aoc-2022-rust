@@ -90,8 +90,9 @@ fn main() {
         },
         11 => {
             let day11 = read_file("in11.txt");
-            let part1 = monkeys::monkey_business(&day11);
-            println!("Question 11: {part1}")
+            let part1 = monkeys::monkey_business(&day11, false);
+            let part2 = monkeys::monkey_business(&day11, true);
+            println!("Question 11: {part1}, {part2}")
         }
         n => {
             println!("No entry for day {n}");

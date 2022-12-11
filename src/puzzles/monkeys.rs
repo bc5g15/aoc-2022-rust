@@ -41,11 +41,12 @@ struct Monkey {
     operation: Operation,
     div_check: u64,
     truth_index: u64,
-    false_index: u64
+    false_index: u64,
+    worried: bool
 }
 
 impl Monkey {
-    fn throw(&mut self) -> (u64, u64) {
+    fn throw(&mut self, max_worry: u64) -> (u64, u64) {
         let mut item = self.items.pop_front().unwrap();
 
         // Apply operator to worry level
@@ -55,8 +56,13 @@ impl Monkey {
             Operation::Square => item * item
         };
 
-        // Decrease worry level
-        item = item / 3;
+        if !self.worried {
+            // Decrease worry level because you are chill
+            item = item / 3;
+        } else {
+            // I'm pretty sure this is how clock maths works?
+            item = item % max_worry
+        }
 
         let index = if item % self.div_check == 0 {
             self.truth_index
@@ -71,7 +77,7 @@ impl Monkey {
     }
 }
 
-fn parse_monkey(input: &[&str]) -> Monkey {
+fn parse_monkey(input: &[&str], worried: bool) -> Monkey {
     // First line is number, skip
     let mut iter = input.iter().skip(1);
 
@@ -92,31 +98,36 @@ fn parse_monkey(input: &[&str]) -> Monkey {
         operation,
         div_check: divisibility,
         truth_index,
-        false_index
+        false_index,
+        worried
     }
 }
 
-fn parse_monkeys(input: &String) -> Vec<Monkey> {
+fn parse_monkeys(input: &String, worried: bool) -> Vec<Monkey> {
     let vectored: Vec<&str> = input.trim().lines().collect();
     let grouped: Vec<&[&str]> = vectored.split(|s| *s == "").collect();
 
     grouped.iter().map(|m| {
         let ms = *m;
-        parse_monkey(ms)
+        parse_monkey(ms, worried)
     }).collect()
 }
 
-pub fn monkey_business(input: &String) -> u64 {
-    let mut monkeys = parse_monkeys(input);
+pub fn monkey_business(input: &String, worried: bool) -> u64 {
+    let mut monkeys = parse_monkeys(input, worried);
     let mut throw_count: Vec<u64> = (0..monkeys.len()).map(|_| 0).collect();
 
-    for _ in 0..20 {
+    let max_worry_level: u64 = monkeys.iter().map(|m| m.div_check).product();
+
+    let max_rounds = if worried { 10000 } else { 20 };
+
+    for _ in 0..max_rounds {
         for i in 0..monkeys.len() {
             let mut thrown_items: VecDeque<(u64, u64)> = VecDeque::new();
             let monkey = monkeys.get_mut(i).unwrap();
             throw_count[i] += monkey.items.len() as u64;
             while monkey.items.len() > 0 {
-                thrown_items.push_back(monkey.throw());
+                thrown_items.push_back(monkey.throw(max_worry_level));
             }
             while thrown_items.len() > 0 {
                 let (item, index) = thrown_items.pop_front().unwrap();
@@ -133,7 +144,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn read_test() {
+    fn example() {
         let input = r"
 Monkey 0:
 Starting items: 79, 98
@@ -164,6 +175,8 @@ Test: divisible by 17
     If false: throw to monkey 1
     ".to_string();
 
-        assert_eq!(monkey_business(&input), 10605);
+        assert_eq!(monkey_business(&input, false), 10605);
+
+        assert_eq!(monkey_business(&input, true), 2713310158)
     }
 }
