@@ -7,8 +7,6 @@ enum Operation {
     Square
 }
 
-// type Operation = (Operand, u64);
-
 fn build_operation(input: Vec<&str>) -> Operation {
     match input.get(1).unwrap() {
         &"+" => {
@@ -25,14 +23,6 @@ fn build_operation(input: Vec<&str>) -> Operation {
         }
         n => panic!("Unrecognised build op {n}")
     }
-
-    // let value: u64 = input.get(0).unwrap().parse().unwrap();
-    // let op = match input.get(1).unwrap() {
-    //     &"+" => Operand::Plus,
-    //     &"*" => Operand::Multiply,
-    //     n => panic!("Unrecognised operand {n}")
-    // };
-    // (op, value)
 }
 
 #[derive(Debug)]
