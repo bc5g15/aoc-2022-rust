@@ -45,21 +45,25 @@ fn get_surrounds((row, column): Coord, width: usize, height: usize) -> Vec<Coord
 }
 
 // (Current, Visited, Current Cost, Estimated Cost)
-type SearchNode = (Coord, HashSet<Coord>, u32, usize);
+type SearchNode = (Coord, u32, usize);
 fn heuristic_search(w: World) -> u32{
     let (grid, start, end) = w;
     let height = grid.len();
     let width = grid[0].len();
     let mut nodes: VecDeque<SearchNode> = VecDeque::new();
     let cost_guess = taxi_distance(start, end);
-    nodes.push_back((start, HashSet::new(), 0, cost_guess));
+    nodes.push_back((start, 0, cost_guess));
+
+    let mut visited: HashSet<Coord> = HashSet::new();
 
 
     while nodes.len() > 0 {
-        let (pos, visited, steps, _) = nodes.pop_front().unwrap();
+        // dbg!(nodes.len());
+        let (pos, steps, _) = nodes.pop_front().unwrap();
         if pos == end {
             return steps;
         }
+        visited.insert(pos);
         let (row, column) = pos;
         let current_height = grid[row][column];
 
@@ -71,17 +75,14 @@ fn heuristic_search(w: World) -> u32{
             new_height <= current_height + 1 &&
             !visited.contains(cs) 
         }).for_each(|cs| {
-            let mut new_visited = visited.clone();
-            new_visited.insert(pos);
             nodes.push_back((
                 *cs,
-                new_visited,
                 steps+1,
-                taxi_distance(*cs, end)
+                ((b'z' - current_height) as usize) + taxi_distance(*cs, end)
             ));
         });
 
-        nodes.make_contiguous().sort_by_key(|(_, _, steps, cost_guess)| steps+ (*cost_guess as u32));
+        nodes.make_contiguous().sort_by_key(|(_, _, cost_guess)|  *cost_guess);
 
     }
     
