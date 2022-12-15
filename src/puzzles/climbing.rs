@@ -1,4 +1,5 @@
 use std::collections::{HashSet, VecDeque};
+use std::cmp::min;
 
 type HeightGrid = Vec<Vec<u8>>;
 type Coord = (usize, usize);
@@ -56,14 +57,18 @@ fn heuristic_search(w: World) -> u32{
 
     let mut visited: HashSet<Coord> = HashSet::new();
 
+    let mut best_steps: u32 = u32::MAX;
 
     while nodes.len() > 0 {
-        // dbg!(nodes.len());
         let (pos, steps, _) = nodes.pop_front().unwrap();
-        if pos == end {
-            return steps;
+        if visited.contains(&pos) {
+            continue;
         }
-        visited.insert(pos);
+        if pos == end {
+            best_steps = min(best_steps, steps);
+        } else {
+            visited.insert(pos);
+        }
         let (row, column) = pos;
         let current_height = grid[row][column];
 
@@ -78,7 +83,7 @@ fn heuristic_search(w: World) -> u32{
             nodes.push_back((
                 *cs,
                 steps+1,
-                ((b'z' - current_height) as usize) + taxi_distance(*cs, end)
+                (steps as usize) + taxi_distance(*cs, end)
             ));
         });
 
@@ -86,7 +91,7 @@ fn heuristic_search(w: World) -> u32{
 
     }
     
-    panic!("Didn't find the end!");
+    best_steps
 }
 
 pub fn shortest_path(input: &String) -> u32 {
