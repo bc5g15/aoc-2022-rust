@@ -10,3 +10,4 @@ pub mod tail_follow;
 pub mod crt;
 pub mod monkeys;
 pub mod climbing;
+pub mod compare;
