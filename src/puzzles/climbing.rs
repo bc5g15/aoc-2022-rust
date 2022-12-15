@@ -47,11 +47,11 @@ fn get_surrounds((row, column): Coord, width: usize, height: usize) -> Vec<Coord
 
 // (Current, Visited, Current Cost, Estimated Cost)
 type SearchNode = (Coord, u32, usize);
-fn heuristic_search(w: World) -> u32{
+fn heuristic_search(w: World, starting_nodes: Vec<SearchNode>) -> u32{
     let (grid, start, end) = w;
     let height = grid.len();
     let width = grid[0].len();
-    let mut nodes: VecDeque<SearchNode> = VecDeque::new();
+    let mut nodes: VecDeque<SearchNode> = VecDeque::from(starting_nodes);
     let cost_guess = taxi_distance(start, end);
     nodes.push_back((start, 0, cost_guess));
 
@@ -96,7 +96,20 @@ fn heuristic_search(w: World) -> u32{
 
 pub fn shortest_path(input: &String) -> u32 {
     let world = parse_elevations(&input);
-    heuristic_search(world)
+    heuristic_search(world, vec![])
+}
+
+pub fn shortest_from_low(input: &String) -> u32 {
+    let world = parse_elevations(&input);
+    let mut lowest_points: Vec<SearchNode> = Vec::new();
+    world.0.iter().enumerate().for_each(|(row, line)| {
+        line.iter().enumerate().for_each(|(column, v)|{
+            if *v == 0 {
+                lowest_points.push(((row, column), 0, taxi_distance((row, column), world.2)));
+            }
+        })
+    });
+    heuristic_search(world, lowest_points)
 }
 
 #[cfg(test)]
@@ -113,5 +126,6 @@ acctuvwj
 abdefghi".to_string();
 
         assert_eq!(shortest_path(&input), 31);
+        assert_eq!(shortest_from_low(&input), 29);
     }
 }
