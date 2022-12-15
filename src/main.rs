@@ -98,7 +98,8 @@ fn main() {
         12 => {
             let day12 = read_file("in12.txt");
             let part1 = climbing::shortest_path(&day12);
-            println!("Question 12: {part1}");
+            let part2 = climbing::shortest_from_low(&day12);
+            println!("Question 12: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
