@@ -23,3 +23,5 @@ Day 9 - Rope Bridge: https://github.com/bc5g15/aoc-2022-rust/pull/9
 Day 10 - Cathode-Ray Tube: https://github.com/bc5g15/aoc-2022-rust/pull/10
 
 Day 11 - Monkey in the Middle: https://github.com/bc5g15/aoc-2022-rust/pull/11
+
+Day 12 - Hill Climbing Algorithm: https://github.com/bc5g15/aoc-2022-rust/pull/12
