@@ -112,7 +112,8 @@ fn main() {
         14 => {
             let day14 = read_file("in14.txt");
             let part1 = sand::maximum_static_sand(&day14);
-            println!("Question 14: {part1}");
+            let part2 = sand::maximum_floor_sand(&day14);
+            println!("Question 14: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
