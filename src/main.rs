@@ -13,6 +13,7 @@ use puzzles::crt;
 use puzzles::monkeys;
 use puzzles::climbing;
 use puzzles::compare;
+use puzzles::sand;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -107,6 +108,11 @@ fn main() {
             let part1 = compare::evaluate_sorted(&day13);
             let part2 = compare::distress_position(&day13);
             println!("Question 13: {part1}, {part2}");
+        },
+        14 => {
+            let day14 = read_file("in14.txt");
+            let part1 = sand::maximum_static_sand(&day14);
+            println!("Question 14: {part1}");
         }
         n => {
             println!("No entry for day {n}");
