@@ -136,8 +136,8 @@ fn compare(a: RecurPacket, b: RecurPacket) -> Compare{
                     }
                 }
             }
-            // If equal and of equal length, I guess ordered?
-            return Ordered
+            // If equal and of equal length, equal, yeah
+            return Equal
         },
         (Value(av), Arr(br)) => {
             return compare(Arr(vec![Value(av)]), Arr(br));
