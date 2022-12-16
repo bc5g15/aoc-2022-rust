@@ -12,6 +12,7 @@ use puzzles::tail_follow;
 use puzzles::crt;
 use puzzles::monkeys;
 use puzzles::climbing;
+use puzzles::compare;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -100,6 +101,12 @@ fn main() {
             let part1 = climbing::shortest_path(&day12);
             let part2 = climbing::shortest_from_low(&day12);
             println!("Question 12: {part1}, {part2}");
+        },
+        13 => {
+            let day13 = read_file("in13.txt");
+            let part1 = compare::evaluate_sorted(&day13);
+            let part2 = compare::distress_position(&day13);
+            println!("Question 13: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
