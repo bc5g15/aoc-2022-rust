@@ -1,4 +1,5 @@
 use std::str::Chars;
+use std::cmp::max;
 
 fn read_pairs(input: &String) -> Vec<(RecurPacket, RecurPacket)>{
     let vectored: Vec<&str> = input.trim().lines().collect();
@@ -58,7 +59,6 @@ fn recur_parse_root(input: &str) -> RecurPacket {
         },
         n => n
     }
-
 }
 
 fn recur_parse(current_text: &mut Chars) -> RecurPacket{
@@ -112,19 +112,20 @@ fn compare(a: RecurPacket, b: RecurPacket) -> Compare{
             return check(av, bv);
         },
         (Arr(ar), Arr(br)) => {
-            for i in 0..ar.len() {
+            for i in 0..max(ar.len(), br.len()) {
                 let ag = ar.get(i);
                 let bg = br.get(i);
 
                 match (ag, bg) {
                     (None, None) => {
+                        // Can't happen, but need to handle it
                         return Ordered;
                     },
                     (Some(_), None) => {
                         return Unordered;
                     },
                     (None, Some(_)) => {
-                        return Unordered;
+                        return Ordered;
                     },
                     (Some(ax), Some(bx)) => {
                         match compare(ax.to_owned(), bx.to_owned()) {
@@ -135,6 +136,8 @@ fn compare(a: RecurPacket, b: RecurPacket) -> Compare{
                     }
                 }
             }
+            // If equal and of equal length, I guess ordered?
+            return Ordered
         },
         (Value(av), Arr(br)) => {
             return compare(Arr(vec![Value(av)]), Arr(br));
@@ -143,7 +146,6 @@ fn compare(a: RecurPacket, b: RecurPacket) -> Compare{
             return compare(Arr(ar), Arr(vec![Value(bv)]));
         }
     }
-    Ordered
 }
 
 pub fn evaluate_sorted(input: &String) -> usize {
@@ -151,8 +153,14 @@ pub fn evaluate_sorted(input: &String) -> usize {
     // let hm: Vec<bool> = pairs.iter().map(|(a, b)| compare(a.to_owned(), b.to_owned()) == Compare::Ordered).collect();
     // dbg!(hm);
     pairs.iter().enumerate()
-        .filter(|(_, (a, b))| compare(a.to_owned(), b.to_owned()) == Compare::Ordered)
+        .filter(|(_, (a, b))| compare(a.to_owned(), b.to_owned()) != Compare::Unordered)
         .fold(0, |acc, (v,(_, _))| (v+1)+acc)
+}
+
+pub fn dbg_sorted(input: &String) {
+    let pairs = read_pairs(input);
+    let hm: Vec<bool> = pairs.iter().map(|(a, b)| compare(a.to_owned(), b.to_owned()) == Compare::Ordered).collect();
+    dbg!(hm);
 }
 
 #[cfg(test)]
@@ -194,7 +202,7 @@ mod tests {
 [1,[2,[3,[4,[5,6,0]]]],8,9]
         ".to_string();
 
-        // evaluate_sorted(&input);
+        dbg_sorted(&input);
         assert_eq!(evaluate_sorted(&input), 13);
     }
 }
