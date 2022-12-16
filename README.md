@@ -25,3 +25,5 @@ Day 10 - Cathode-Ray Tube: https://github.com/bc5g15/aoc-2022-rust/pull/10
 Day 11 - Monkey in the Middle: https://github.com/bc5g15/aoc-2022-rust/pull/11
 
 Day 12 - Hill Climbing Algorithm: https://github.com/bc5g15/aoc-2022-rust/pull/12
+
+Day 13 - Distress Signal: https://github.com/bc5g15/aoc-2022-rust/pull/13
