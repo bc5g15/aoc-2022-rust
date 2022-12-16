@@ -105,7 +105,8 @@ fn main() {
         13 => {
             let day13 = read_file("in13.txt");
             let part1 = compare::evaluate_sorted(&day13);
-            println!("Question 13: {part1}")
+            let part2 = compare::distress_position(&day13);
+            println!("Question 13: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");

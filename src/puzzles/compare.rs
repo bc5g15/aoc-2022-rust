@@ -12,7 +12,11 @@ fn read_pairs(input: &String) -> Vec<(RecurPacket, RecurPacket)>{
     }).collect()
 }
 
-#[derive(Debug, Clone)]
+fn read_all_together(input: &String) -> Vec<RecurPacket>{
+    input.trim().lines().filter(|l| *l != "").map(|l| recur_parse_root(l)).collect()
+}
+
+#[derive(Debug, Clone, PartialEq)]
 enum RecurPacket {
     Value(u32),
     Arr (Vec<RecurPacket>)
@@ -103,6 +107,23 @@ pub fn evaluate_sorted(input: &String) -> usize {
         .fold(0, |acc, (v,(_, _))| (v+1)+acc)
 }
 
+pub fn distress_position(input: &String) -> usize {
+    use RecurPacket::*;
+    let two_packet = Arr(vec![Arr(vec![Value(2)])]);
+    let six_packet = Arr(vec![Arr(vec![Value(6)])]);
+
+    let mut packets = read_all_together(&input);
+    packets.push(two_packet.clone());
+    packets.push(six_packet.clone());
+    packets.sort_by(|a, b| compare(a.to_owned(), b.to_owned()));
+
+    // indexes
+    let six_pos = &packets.iter().position(|p| *p == six_packet).unwrap();
+    let two_pos = &packets.iter().position(|p| *p == two_packet).unwrap();
+
+    (six_pos+1) * (two_pos+1)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -141,5 +162,7 @@ mod tests {
         ".to_string();
 
         assert_eq!(evaluate_sorted(&input), 13);
+
+        assert_eq!(distress_position(&input), 140);
     }
 }
