@@ -47,9 +47,11 @@ fn find_lowest_y(world: &World) -> i32{
     world.iter().map(|(_x, y)| *y).max().unwrap()
 }
 
-fn compute_sand_position(rock: &World, sand: &World, low_point: i32) -> Option<Coord>{
+fn compute_sand_position(rock: &World, sand: &World, low_point: i32, floor: bool) -> Option<Coord>{
     let mut x: i32 = 500;
     let mut y: i32 = 0;
+
+    let floor_depth = if floor { low_point+1 } else {low_point};
 
     loop {
         y += 1;
@@ -71,13 +73,18 @@ fn compute_sand_position(rock: &World, sand: &World, low_point: i32) -> Option<C
         }
 
         // Are we below everything?
-        if y > low_point {
+        if !floor && y > low_point {
             return None;
         }
+
+        if floor && y > floor_depth {
+            return Some((x, y-1));
+        }
+
     }
 }
 
-fn simulate_sand(rock: &World) -> u32 {
+fn simulate_sand(rock: &World, floor: bool) -> u32 {
     let mut sand: World = HashSet::new();
 
     let mut count: u32 = 0;
@@ -86,8 +93,11 @@ fn simulate_sand(rock: &World) -> u32 {
     loop {
         count += 1;
 
-        match compute_sand_position(&rock, &sand, low_point) {
+        match compute_sand_position(&rock, &sand, low_point, floor) {
             Some(coord) => { 
+                if coord == (500, 0) {
+                    return count;
+                }
                 sand.insert(coord); 
             }
             None => return count-1
@@ -97,7 +107,12 @@ fn simulate_sand(rock: &World) -> u32 {
 
 pub fn maximum_static_sand(input: &String) -> u32 {
     let rock = read_rocks(input);
-    simulate_sand(&rock)
+    simulate_sand(&rock, false)
+}
+
+pub fn maximum_floor_sand(input: &String) -> u32 {
+    let rock = read_rocks(input);
+    simulate_sand(&rock, true)
 }
 
 #[cfg(test)]
@@ -112,5 +127,14 @@ mod tests {
         ".to_string();
 
         assert_eq!(maximum_static_sand(&input), 24);
+    }
+
+    #[test]
+    fn example_two() {
+        let input = r"
+498,4 -> 498,6 -> 496,6
+503,4 -> 502,4 -> 502,9 -> 494,9
+        ".to_string();
+        assert_eq!(maximum_floor_sand(&input), 93);
     }
 }
