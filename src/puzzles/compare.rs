@@ -1,5 +1,5 @@
 use std::str::Chars;
-use std::cmp::max;
+use std::cmp::{max, Ordering};
 
 fn read_pairs(input: &String) -> Vec<(RecurPacket, RecurPacket)>{
     let vectored: Vec<&str> = input.trim().lines().collect();
@@ -16,39 +16,6 @@ fn read_pairs(input: &String) -> Vec<(RecurPacket, RecurPacket)>{
 enum RecurPacket {
     Value(u32),
     Arr (Vec<RecurPacket>)
-}
-
-#[derive(Debug)]
-enum Packet {
-    StepIn,
-    Value (u32),
-    StepOut
-}
-
-fn parse_packet(input: &str) -> Vec<Packet> {
-    use Packet::*;
-    let mut iter = input.chars();
-
-    let mut output: Vec<Packet> = Vec::new();
-
-    while let Some(c) = iter.next() {
-        if c.is_digit(10) {
-            let mut number = vec![c];
-            iter.by_ref().take_while(|n| n.is_digit(10))
-                .for_each(|n| number.push(n));
-            output.push(Value (number.iter().collect::<String>().parse().unwrap()));
-            continue;
-        }
-
-        match c {
-            '[' => output.push(StepIn),
-            ']' => output.push(StepOut),
-            ',' => continue,
-            _ => panic!("Unrecognised entry {c}")
-        }
-    }
-
-    output
 }
 
 fn recur_parse_root(input: &str) -> RecurPacket {
@@ -85,31 +52,12 @@ fn recur_parse(current_text: &mut Chars) -> RecurPacket{
     Arr (value_arr)
 }
 
-#[derive(Debug, PartialEq)]
-enum Compare {
-    Ordered,
-    Unordered,
-    Equal
-}
-
-fn check(a: u32, b: u32) -> Compare {
-    use Compare::*;
-
-    if a == b {
-        Equal
-    } else if a > b {
-        Unordered
-    } else {
-        Ordered
-    }
-}
-
-fn compare(a: RecurPacket, b: RecurPacket) -> Compare{
+fn compare(a: RecurPacket, b: RecurPacket) -> Ordering{
     use RecurPacket::*;
-    use Compare::*;
+    use Ordering::*;
     match (a, b) {
         (Value(av), Value(bv)) => {
-            return check(av, bv);
+            return av.cmp(&bv);
         },
         (Arr(ar), Arr(br)) => {
             for i in 0..max(ar.len(), br.len()) {
@@ -119,18 +67,18 @@ fn compare(a: RecurPacket, b: RecurPacket) -> Compare{
                 match (ag, bg) {
                     (None, None) => {
                         // Can't happen, but need to handle it
-                        return Ordered;
+                        return Less;
                     },
                     (Some(_), None) => {
-                        return Unordered;
+                        return Greater;
                     },
                     (None, Some(_)) => {
-                        return Ordered;
+                        return Less;
                     },
                     (Some(ax), Some(bx)) => {
                         match compare(ax.to_owned(), bx.to_owned()) {
-                            Ordered => return Ordered,
-                            Unordered => return Unordered,
+                            Greater => return Greater,
+                            Less => return Less,
                             Equal => continue
                         }
                     }
@@ -150,17 +98,9 @@ fn compare(a: RecurPacket, b: RecurPacket) -> Compare{
 
 pub fn evaluate_sorted(input: &String) -> usize {
     let pairs = read_pairs(input);
-    // let hm: Vec<bool> = pairs.iter().map(|(a, b)| compare(a.to_owned(), b.to_owned()) == Compare::Ordered).collect();
-    // dbg!(hm);
     pairs.iter().enumerate()
-        .filter(|(_, (a, b))| compare(a.to_owned(), b.to_owned()) != Compare::Unordered)
+        .filter(|(_, (a, b))| compare(a.to_owned(), b.to_owned()) != Ordering::Greater)
         .fold(0, |acc, (v,(_, _))| (v+1)+acc)
-}
-
-pub fn dbg_sorted(input: &String) {
-    let pairs = read_pairs(input);
-    let hm: Vec<bool> = pairs.iter().map(|(a, b)| compare(a.to_owned(), b.to_owned()) == Compare::Ordered).collect();
-    dbg!(hm);
 }
 
 #[cfg(test)]
@@ -169,8 +109,6 @@ mod tests {
 
     #[test]
     fn read_tests() {
-        dbg!(parse_packet("[[7,[[8,10,1,0,2],0,10]]]"));
-
         dbg!(recur_parse_root("[[[9]]]"));
     }
 
@@ -202,7 +140,6 @@ mod tests {
 [1,[2,[3,[4,[5,6,0]]]],8,9]
         ".to_string();
 
-        dbg_sorted(&input);
         assert_eq!(evaluate_sorted(&input), 13);
     }
 }
