@@ -12,3 +12,4 @@ pub mod monkeys;
 pub mod climbing;
 pub mod compare;
 pub mod sand;
+pub mod beacon;
