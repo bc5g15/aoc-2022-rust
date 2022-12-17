@@ -18,16 +18,18 @@ fn read_report(input: &String) -> Vec<SensorBeacon> {
     }).collect()
 }
 
-fn all_checked_spaces(sb: SensorBeacon) -> VisitSpace {
+fn all_checked_spaces(sb: SensorBeacon, row: i32) -> VisitSpace {
     let ((x, y), (a, b)) = sb;
 
     let radius: i32  = (x.abs_diff(a) + y.abs_diff(b)) as i32;
     let mut visited: VisitSpace = HashSet::new();
 
     for i in (-radius)..=radius {
-        let thickness: i32 = i.abs().abs_diff(radius) as i32;
-        for j in (x-thickness)..=(x+thickness) {
-            visited.insert((j, y+i));
+        if (y+i) == row {
+            let thickness: i32 = i.abs().abs_diff(radius) as i32;
+            for j in (x-thickness)..=(x+thickness) {
+                visited.insert((j, y+i));
+            }
         }
     }
     visited
@@ -41,7 +43,7 @@ pub fn all_seen_at_row(input: &String, row: i32) -> usize {
         occupied_spaces.insert(*b);
     }
 
-    let all_seen = read_report(input).iter().map(|sb| all_checked_spaces(*sb))
+    let all_seen = read_report(input).iter().map(|sb| all_checked_spaces(*sb, row))
         .reduce(|acc, cur| acc.union(&cur).map(|c| *c).collect()).unwrap();
     
     all_seen.difference(&occupied_spaces).filter(|(_x, y)| *y==row).count()
@@ -54,7 +56,7 @@ mod tests {
     #[test]
     fn read_neg() {
         let trouble = ((0,11), (2,10));
-        let mut spaces: Vec<Coord> = all_checked_spaces(trouble).iter().map(|c| *c).collect();
+        let mut spaces: Vec<Coord> = all_checked_spaces(trouble, 10).iter().map(|c| *c).collect();
         spaces.sort_by_key(|(_x, y)| *y);
         dbg!(spaces);
     }
