@@ -49,6 +49,37 @@ pub fn all_seen_at_row(input: &String, row: i32) -> usize {
     all_seen.difference(&occupied_spaces).filter(|(_x, y)| *y==row).count()
 }
 
+type SensorRadius = (Coord, i32);
+
+fn calculate_radii(sensors: Vec<SensorBeacon>) -> Vec<SensorRadius>{
+    sensors.iter().map(|((x, y), (a, b))| {
+        let radius: i32 = (x.abs_diff(*a) + y.abs_diff(*b)) as i32;
+        return ((*x, *y), radius);
+    }).collect()
+}
+
+fn check_containment(sr: SensorRadius, location: Coord) -> bool {
+    let ((x, y), r) = sr;
+    let (a, b) = location;
+
+    let new_r = (x.abs_diff(a) + y.abs_diff(b)) as i32;
+    new_r <= r
+}
+
+pub fn find_absent_position_in_square(input: &String, square_max: i32) -> Coord {
+    let sbs = read_report(input);
+    let sensor_radii = calculate_radii(sbs);
+
+    for i in 0..=square_max {
+        for j in 0..=square_max {
+            if sensor_radii.iter().all(|s| !check_containment(*s, (i, j))) {
+                return (i, j)
+            }
+        }
+    }
+    panic!("No luck!");
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -81,5 +112,6 @@ mod tests {
         ".to_string();
 
         assert_eq!(all_seen_at_row(&input, 10), 26);
+        assert_eq!(find_absent_position_in_square(&input, 20), (14, 11));
     }
 }
