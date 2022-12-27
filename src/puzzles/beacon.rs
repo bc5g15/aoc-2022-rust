@@ -57,7 +57,6 @@ fn resolve_ranges_for_row(srs: &Vec<SensorRadius>, row: i32) -> Vec<View> {
     views.sort();
 
     let mut merged: Vec<View> = Vec::new();
-    // dbg!(row, &views);
 
     let (mut start, mut end) = views[0];
 
@@ -75,7 +74,15 @@ fn resolve_ranges_for_row(srs: &Vec<SensorRadius>, row: i32) -> Vec<View> {
     merged
 }
 
-pub fn find_range_gap(input: &String,square_max: i32) -> i64 {
+pub fn retro_part_one(input: &String, target_row: i32) -> i32 {
+    let sbs = read_report(input);
+    let sensor_radii = calculate_radii(sbs);
+
+    let rs = resolve_ranges_for_row(&sensor_radii, target_row);
+    rs.iter().map(|(start, end)| end - start).sum()
+}
+
+pub fn find_range_gap(input: &String, square_max: i32) -> i64 {
     let sbs = read_report(input);
     let sensor_radii = calculate_radii(sbs);
 
@@ -114,27 +121,6 @@ fn calculate_radii(sensors: Vec<SensorBeacon>) -> Vec<SensorRadius>{
     }).collect()
 }
 
-fn check_containment(sr: SensorRadius, location: Coord) -> bool {
-    let ((x, y), r) = sr;
-    let (a, b) = location;
-
-    let new_r = (x.abs_diff(a) + y.abs_diff(b)) as i32;
-    new_r <= r
-}
-
-pub fn find_absent_position_in_square(input: &String, square_max: i32) -> Coord {
-    let sbs = read_report(input);
-    let sensor_radii = calculate_radii(sbs);
-
-    for i in 0..=square_max {
-        for j in 0..=square_max {
-            if sensor_radii.iter().all(|s| !check_containment(*s, (i, j))) {
-                return (i, j)
-            }
-        }
-    }
-    panic!("No luck!");
-}
 
 #[cfg(test)]
 mod tests {
@@ -168,7 +154,8 @@ mod tests {
         ".to_string();
 
         assert_eq!(all_seen_at_row(&input, 10), 26);
-        assert_eq!(find_absent_position_in_square(&input, 20), (14, 11));
+        assert_eq!(retro_part_one(&input, 10), 26);
+        // assert_eq!(find_absent_position_in_square(&input, 20), (14, 11));
         assert_eq!(find_range_gap(&input, 20), 56000011);
     }
 }
