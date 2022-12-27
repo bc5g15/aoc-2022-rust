@@ -14,11 +14,12 @@ use puzzles::monkeys;
 use puzzles::climbing;
 use puzzles::compare;
 use puzzles::sand;
+use puzzles::beacon;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
         Ok(v) => v,
-        Err(_) => panic!("No filename ${filename} found")
+        Err(_) => panic!("No filename {filename} found")
     }
 }
 
@@ -114,6 +115,12 @@ fn main() {
             let part1 = sand::maximum_static_sand(&day14);
             let part2 = sand::maximum_floor_sand(&day14);
             println!("Question 14: {part1}, {part2}");
+        },
+        15 => {
+            let day15 = read_file("in15.txt");
+            let part1 = beacon::retro_part_one(&day15, 2000000);
+            let part2 = beacon::find_range_gap(&day15, 4000000);
+            println!("Question 15: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
