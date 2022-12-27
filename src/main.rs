@@ -118,8 +118,9 @@ fn main() {
         },
         15 => {
             let day15 = read_file("in15.txt");
-            let part1 = beacon::all_seen_at_row(&day15, 2000000);
-            println!("Question 15: {part1}");
+            // let part1 = beacon::all_seen_at_row(&day15, 2000000);
+            let part2 = beacon::find_range_gap(&day15, 4000000);
+            println!("Question 15: {part2}");
         }
         n => {
             println!("No entry for day {n}");
