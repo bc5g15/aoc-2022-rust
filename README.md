@@ -29,3 +29,5 @@ Day 12 - Hill Climbing Algorithm: https://github.com/bc5g15/aoc-2022-rust/pull/1
 Day 13 - Distress Signal: https://github.com/bc5g15/aoc-2022-rust/pull/13
 
 Day 14 - Regolith Reservoir: https://github.com/bc5g15/aoc-2022-rust/pull/14
+
+Day 15 - Beacon Exclusion Zone: https://github.com/bc5g15/aoc-2022-rust/pull/15
