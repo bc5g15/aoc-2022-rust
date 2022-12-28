@@ -13,3 +13,4 @@ pub mod climbing;
 pub mod compare;
 pub mod sand;
 pub mod beacon;
+pub mod valves;
