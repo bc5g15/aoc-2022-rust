@@ -9,7 +9,9 @@ fn read_valves(input: &String) -> (FlowMap, PathMap) {
     let mut path_map: PathMap = HashMap::new();
 
     input.trim().lines().for_each(|line| {
-        let words: Vec<&str> = line.trim().split(" ").collect();
+        let comma_stripped: String = line.trim().chars().filter(|c| *c!=',').collect();
+        let words: Vec<&str> = comma_stripped.split(" ").collect();
+        
         let id = words[1].to_string();
         
         let flow: u32 = words[4].chars().filter(|c| c.is_ascii_digit()).collect::<String>()
@@ -105,13 +107,15 @@ fn best_time_pressure(input: &String) -> u32 {
         }
     }
     // dbg!(best_score_at_minute);
-    dbg!(best_path);
-    dbg!(&max_score);
+    // dbg!(best_path);
+    // dbg!(&max_score);
     max_score
 }
 
 fn graphify(path_map: &PathMap)  -> (Vec<Vec<u32>>, HashMap<String, usize>) {
     let size = path_map.len();
+
+    // dbg!(path_map);
 
     let idx_map: HashMap<String, usize> = path_map.iter()
         .enumerate()
@@ -149,7 +153,7 @@ fn floyd_warshall_roy(graph: Vec<Vec<u32>>) -> Vec<Vec<u32>> {
     distance
 }
 
-fn magical_calculation(input: &String) -> u32 {
+pub fn magical_calculation(input: &String) -> u32 {
     let (flows, paths) = read_valves(input);
     let (graph, idx_map) = graphify(&paths);
     let distances = floyd_warshall_roy(graph);
@@ -177,7 +181,8 @@ fn travelling_salesman(
 
     let mut max_flow = flow;
 
-    // println!("{:b}", state);
+    // println!("C:{}\nM:{}\nF:{}\nS:{:b}\n---", current_index, minutes, flow, state);
+    // dbg!(minutes, flow, "---");
 
     for name in scored_nodes.iter() {
         let new_index: usize = *idx_map.get(name).unwrap();
@@ -197,7 +202,7 @@ fn travelling_salesman(
         // dbg!(name);
         let new_state = state | (1 << new_index);
         // let new_state = state;
-        let new_flow = flow + (current_minutes+ * flows.get(name).unwrap());
+        let new_flow = flow + (current_minutes * flows.get(name).unwrap());
 
         max_flow = max_flow.max(
             travelling_salesman(flows, scored_nodes, distances, idx_map, current_minutes, new_flow, new_index, new_state)
@@ -264,7 +269,6 @@ mod tests {
         Valve II has flow rate=0; tunnels lead to valves AA, JJ
         Valve JJ has flow rate=21; tunnel leads to valve II".to_string();
 
-        dbg!("Test");
         dbg!(magical_calculation(&input));
     }
 
