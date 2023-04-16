@@ -110,7 +110,7 @@ fn best_time_pressure(input: &String) -> u32 {
     max_score
 }
 
-fn graphify(path_map: &PathMap)  -> Vec<Vec<u32>>{
+fn graphify(path_map: &PathMap)  -> (Vec<Vec<u32>>, HashMap<String, usize>) {
     let size = path_map.len();
 
     let idx_map: HashMap<String, usize> = path_map.iter()
@@ -129,7 +129,7 @@ fn graphify(path_map: &PathMap)  -> Vec<Vec<u32>>{
         })
     });
 
-    graph
+    (graph, idx_map)
 }
 
 fn floyd_warshall_roy(graph: Vec<Vec<u32>>) -> Vec<Vec<u32>> {
@@ -151,15 +151,8 @@ fn floyd_warshall_roy(graph: Vec<Vec<u32>>) -> Vec<Vec<u32>> {
 
 fn magical_calculation(input: &String) -> u32 {
     let (flows, paths) = read_valves(input);
-    let graph = graphify(&paths);
+    let (graph, idx_map) = graphify(&paths);
     let distances = floyd_warshall_roy(graph);
-
-    let idx_map: HashMap<String, usize> = paths.iter()
-        .enumerate()
-        .fold(HashMap::new(), |mut map, (index, (name, _))| {
-            map.insert(name.clone(), index);
-            map
-        });
 
     let scored_nodes: Vec<String> = flows.iter()
         .filter(|(_name, score)| **score>0)
@@ -194,7 +187,7 @@ fn travelling_salesman(
             .unwrap_or(0);
 
         if 
-            state & (1 << new_index) == 1   // Already switched on
+            state & (1 << new_index) >= 1   // Already switched on
             || current_minutes <= 0         // Can't reach in time
         {
             // Don't care about this node
@@ -203,7 +196,8 @@ fn travelling_salesman(
 
         // dbg!(name);
         let new_state = state | (1 << new_index);
-        let new_flow = flow + (current_minutes * flows.get(name).unwrap());
+        // let new_state = state;
+        let new_flow = flow + (current_minutes+ * flows.get(name).unwrap());
 
         max_flow = max_flow.max(
             travelling_salesman(flows, scored_nodes, distances, idx_map, current_minutes, new_flow, new_index, new_state)
@@ -250,9 +244,10 @@ mod tests {
 
         let (_flow, paths) = read_valves(&input);
 
-        let g = graphify(&paths);
+        let (g, x) = graphify(&paths);
         let d = floyd_warshall_roy(g);
         dbg!(d);
+        dbg!(x);
     }
 
     #[test]
@@ -278,5 +273,8 @@ mod tests {
         let thing = vec![vec![u32::MAX / 4; 10]; 10];
 
         dbg!(thing);
+
+        dbg!((1<<16)-1);
+        println!("{:b}", (1<<16));
     }
 }
