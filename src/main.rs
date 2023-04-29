@@ -15,6 +15,7 @@ use puzzles::climbing;
 use puzzles::compare;
 use puzzles::sand;
 use puzzles::beacon;
+use puzzles::valves;
 
 fn read_file(filename: &str) -> String {
     match fs::read_to_string(filename.to_string()) {
@@ -121,6 +122,12 @@ fn main() {
             let part1 = beacon::retro_part_one(&day15, 2000000);
             let part2 = beacon::find_range_gap(&day15, 4000000);
             println!("Question 15: {part1}, {part2}");
+        },
+        16 => {
+            let day16 = read_file("in16.txt");
+            let part1 = valves::part1(&day16);
+            let part2 = valves::part2(&day16);
+            println!("Question 16: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");
