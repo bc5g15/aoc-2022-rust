@@ -125,8 +125,9 @@ fn main() {
         },
         16 => {
             let day16 = read_file("in16.txt");
-            let part1 = valves::magical_calculation(&day16);
-            println!("Question 16: {part1}");
+            let part1 = valves::part1(&day16);
+            let part2 = valves::part2(&day16);
+            println!("Question 16: {part1}, {part2}");
         }
         n => {
             println!("No entry for day {n}");

@@ -153,7 +153,12 @@ fn floyd_warshall_roy(graph: Vec<Vec<u32>>) -> Vec<Vec<u32>> {
     distance
 }
 
-pub fn magical_calculation(input: &String) -> u32 {
+pub fn part1(input: &String) -> u32 {
+    let (flow, _) = magical_calculation(input, 30);
+    flow
+}
+
+pub fn magical_calculation(input: &String, turns: u32) -> (u32, HashMap<u64, u32>) {
     let (flows, paths) = read_valves(input);
     let (graph, idx_map) = graphify(&paths);
     let distances = floyd_warshall_roy(graph);
@@ -165,11 +170,48 @@ pub fn magical_calculation(input: &String) -> u32 {
     
     let start_index = *idx_map.get("AA").unwrap();
 
-    travelling_salesman(&flows, &scored_nodes, &distances, &idx_map, 30, 0, start_index, 0)
+    let mut state_flow: HashMap<u64, u32> = HashMap::new();
+
+    let flow = travelling_salesman(&flows, &mut state_flow, &scored_nodes, &distances, &idx_map, turns, 0, start_index, 0);
+
+    (flow, state_flow)
+}
+
+pub fn part2(input: &String) -> u32 {
+    // let (flows, paths) = read_valves(input);
+    // let (graph, idx_map) = graphify(&paths);
+    // let distances = floyd_warshall_roy(graph);
+
+    // let scored_nodes: Vec<String> = flows.iter()
+    //     .filter(|(_name, score)| **score>0)
+    //     .map(|(name, _score)| name.clone()).collect();
+    //     // Find optimal path through all point-scoring nodes
+    
+    // let start_index = *idx_map.get("AA").unwrap();
+
+    // let mut memory: HashMap<u64, u32> = HashMap::new();
+
+    // travelling_salesman(&flows, &mut state_flow, &scored_nodes, &distances, &idx_map, 30, 0, start_index, 0);
+    let (_, memory) = magical_calculation(input, 26);
+
+    let max_flow = memory.iter()
+        .fold(0, |max, (&state1, &flow1)| {
+            memory.iter()
+                .fold(max, |max, (&state2, &flow2)| {
+                    // Check there is no overlap
+                    if state1 & state2 == 0 {
+                        return max.max(flow1 + flow2);
+                    }
+                    max
+                })
+        });
+
+    max_flow
 }
 
 fn travelling_salesman(
     flows: &FlowMap,
+    memory: &mut HashMap<u64, u32>,
     scored_nodes: &Vec<String>,
     distances: &Vec<Vec<u32>>,
     idx_map: &HashMap<String, usize>,
@@ -180,6 +222,8 @@ fn travelling_salesman(
 ) -> u32 {
 
     let mut max_flow = flow;
+
+    memory.insert(state, *memory.get(&state).unwrap_or(&0).max(&flow));
 
     // println!("C:{}\nM:{}\nF:{}\nS:{:b}\n---", current_index, minutes, flow, state);
     // dbg!(minutes, flow, "---");
@@ -205,7 +249,7 @@ fn travelling_salesman(
         let new_flow = flow + (current_minutes * flows.get(name).unwrap());
 
         max_flow = max_flow.max(
-            travelling_salesman(flows, scored_nodes, distances, idx_map, current_minutes, new_flow, new_index, new_state)
+            travelling_salesman(flows, memory, scored_nodes, distances, idx_map, current_minutes, new_flow, new_index, new_state)
         )
     }
 
@@ -269,7 +313,24 @@ mod tests {
         Valve II has flow rate=0; tunnels lead to valves AA, JJ
         Valve JJ has flow rate=21; tunnel leads to valve II".to_string();
 
-        dbg!(magical_calculation(&input));
+        dbg!(magical_calculation(&input, 30));
+    }
+
+    #[test]
+    fn magic2() {
+        let input = r"
+        Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
+        Valve BB has flow rate=13; tunnels lead to valves CC, AA
+        Valve CC has flow rate=2; tunnels lead to valves DD, BB
+        Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
+        Valve EE has flow rate=3; tunnels lead to valves FF, DD
+        Valve FF has flow rate=0; tunnels lead to valves EE, GG
+        Valve GG has flow rate=0; tunnels lead to valves FF, HH
+        Valve HH has flow rate=22; tunnel leads to valve GG
+        Valve II has flow rate=0; tunnels lead to valves AA, JJ
+        Valve JJ has flow rate=21; tunnel leads to valve II".to_string();
+
+        dbg!(part2(&input));
     }
 
     #[test]
